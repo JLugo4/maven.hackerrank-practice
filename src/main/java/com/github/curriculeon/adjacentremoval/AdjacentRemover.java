@@ -26,13 +26,7 @@ public class AdjacentRemover {
         while (canMoveEither()) {
             String characterToEvaluate = "www";
             if(!canMoveWendy()) {
-                break;
-            }
-            if (!isWendysTurns) {
                 characterToEvaluate = "bbb";
-                if(!canMoveBob()) {
-                    break;
-                }
             }
             final int indexOfSubstring = sb.indexOf(characterToEvaluate);
             final int indexOfMiddleCharacter = indexOfSubstring + 1;
@@ -41,25 +35,23 @@ public class AdjacentRemover {
             isWendysTurns = !isWendysTurns;
         }
     }
-
     public String solve() {
-        if (canMoveWendy() && !canMoveBob()) {
+        boolean bobCantMove = canMoveWendy() && !canMoveBob();
+        boolean wendyCantMove = !canMoveWendy() && canMoveBob();
+
+        if (bobCantMove) {
             return "wendy";
         }
-        if (!canMoveWendy() && canMoveBob()) {
+        if (wendyCantMove) {
             return "bob";
         }
 
-
-        if (canMoveEither()) {
-                play();
-                if(isWendysTurns) {
-                    return "bob";
-                } else {
-                    return "wendy";
-                }
+        play();
+        if (isWendysTurns) {
+            return "bob";
         } else {
-            return "bob";
+            return "wendy";
         }
+
     }
 }
