@@ -1,7 +1,7 @@
 package com.github.curriculeon.adjacentremoval;
 
 public class AdjacentRemover {
-    private final String input;
+    private String input;
     private boolean isWendysTurns;
 
     public AdjacentRemover(String input) {
@@ -9,8 +9,8 @@ public class AdjacentRemover {
         this.isWendysTurns = true;
     }
 
-    public boolean canMoveBoth() {
-        return canMoveBob() && canMoveWendy();
+    public boolean canMoveEither() {
+        return canMoveBob() || canMoveWendy();
     }
 
     public boolean canMoveBob() {
@@ -23,7 +23,7 @@ public class AdjacentRemover {
 
     public void play() {
         final StringBuilder sb = new StringBuilder(this.input);
-        while (true) {
+        while (canMoveEither()) {
             String characterToEvaluate = "www";
             if(!canMoveWendy()) {
                 break;
@@ -37,6 +37,7 @@ public class AdjacentRemover {
             final int indexOfSubstring = sb.indexOf(characterToEvaluate);
             final int indexOfMiddleCharacter = indexOfSubstring + 1;
             sb.deleteCharAt(indexOfMiddleCharacter);
+            this.input = sb.toString();
             isWendysTurns = !isWendysTurns;
         }
     }
@@ -50,17 +51,13 @@ public class AdjacentRemover {
         }
 
 
-        if (canMoveBoth()) {
-            if (canMoveWendy() && !canMoveBob()) {
-                return "wendy";
-            } else {
+        if (canMoveEither()) {
                 play();
                 if(isWendysTurns) {
                     return "bob";
                 } else {
                     return "wendy";
                 }
-            }
         } else {
             return "bob";
         }
